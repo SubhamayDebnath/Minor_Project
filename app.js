@@ -10,6 +10,7 @@ import MongoStore from "connect-mongo";
 config();
 
 import mainRoutes from './server/routes/main/main.routes.js'
+import authRoutes from "./server/routes/auth/auth.routes.js"
 
 const app = express();
 const PORT = process.env.PORT;
@@ -43,6 +44,7 @@ app.use((req, res, next) => {
 });
 
 app.use("",mainRoutes);
+app.use("",authRoutes)
 app.use("*", (req, res) => {
   res.status(404).send("Page Not Found");
 });

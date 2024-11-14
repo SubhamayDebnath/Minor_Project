@@ -7,7 +7,7 @@
         </div>
     </div>
     <div class="hero-section-image-container h-100 w-100">
-        <img src="/images/hero6.jpg" alt="hero" class="h-100 w-100 object-fit-cover">
+        <img src="/images/hero6.jpg" alt="hero" id="heroImage" class="h-100 w-100 object-fit-cover">
         <div class="overlay"></div>
     </div>
 </section>
@@ -21,3 +21,25 @@
         </p>
     </div>
 </section>
+<script>
+    const imageLink = [
+        '/images/hero1.jpg',
+        '/images/hero2.jpg',
+        '/images/hero3.jpg',
+        '/images/hero4.jpg',
+        '/images/hero5.jpg',
+        '/images/hero6.jpg',
+    ];
+  
+  
+  let currentIndex = 0;
+  
+  function changeContent() {
+    currentIndex = (currentIndex + 1) % imageLink.length;
+    document.getElementById("heroImage").src = imageLink[currentIndex];
+
+  }
+  
+  setInterval(changeContent, 2000);
+  
+</script>
