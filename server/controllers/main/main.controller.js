@@ -6,7 +6,7 @@ const homePage = async (req, res) => {
     res.render("index");
   } catch (error) {
     console.log(`Home Page Error: ${error}`);
-    res.redirect("/error");
+    res.redirect(500,"/error");
   }
 };
 

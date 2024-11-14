@@ -14,24 +14,24 @@ const register = async (req, res, next) => {
     const { username, phone, email, password, latitude, longitude } = req.body;
     if (!username || !phone || !email || !password || !latitude || !longitude) {
       req.flash("error_msg", "Please fill in all fields");
-      return res.redirect("/register");
+      return res.redirect(400,"/register");
     }
     const existingUser = await User.findOne({ $or: [{ email }, { phone }] });
     if (existingUser) {
       req.flash("error_msg", "Email already in use");
-      return res.redirect("/register");
+      return res.redirect(400,"/register");
     }
     if (existingUser.email === email && existingUser.phone === phone) {
       req.flash("error_msg", "Email and Phone already in use");
-      return res.redirect("/register");
+      return res.redirect(400,"/register");
     }
     if (existingUser.email === email) {
       req.flash("error_msg", "Email already in use");
-      return res.redirect("/register");
+      return res.redirect(400,"/register");
     }
     if (existingUser.phone === phone) {
       req.flash("error_msg", "Phone already in use");
-      return res.redirect("/register");
+      return res.redirect(400,"/register");
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const newUser = await User.create({
@@ -46,13 +46,13 @@ const register = async (req, res, next) => {
     });
     if (!newUser) {
       req.flash("error_msg", "Failed to create user");
-      return res.redirect("/register");
+      return res.redirect(400,"/register");
     }
     await newUser.save();
-    res.redirect("/login");
+    res.redirect(201,"/login");
   } catch (error) {
     console.log(`Register error : ${error}`);
-    res.redirect("/error");
+    res.redirect(500,"/error");
   }
 };
 
