@@ -3,7 +3,11 @@
 */
 const homePage = async (req, res) => {
   try {
-    res.render("index");
+    const locals = {
+      title: "Disaster Management",
+      description: "Disaster Management",
+    };
+    res.render("index",{locals,user:req.user});
   } catch (error) {
     console.log(`Home Page Error: ${error}`);
     res.redirect("/error");
