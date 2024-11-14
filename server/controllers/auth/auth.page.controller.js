@@ -7,7 +7,7 @@ const registerPage = async (req, res) => {
       res.render("auth/register",{layout:authenticationLayout});
     } catch (error) {
       console.log(`Register Page Error: ${error}`);
-      res.redirect(500,"/error");
+      res.redirect("/error");
     }
 };
 /*
@@ -18,7 +18,7 @@ const loginPage = async (req, res) => {
     res.render("auth/login",{layout:authenticationLayout});
   } catch (error) {
     console.log(`Login Page Error: ${error}`);
-    res.redirect(500,"/error");
+    res.redirect("/error");
   }
 };
   

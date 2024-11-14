@@ -52,7 +52,7 @@ const register = async (req, res, next) => {
     res.redirect(201,"/login");
   } catch (error) {
     console.log(`Register error : ${error}`);
-    res.redirect(500,"/error");
+    res.redirect("/error");
   }
 };
 
