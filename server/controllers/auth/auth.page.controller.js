@@ -1,11 +1,25 @@
+const authenticationLayout = "../views/layouts/authentication";
+/*
+  Register Page 
+*/
 const registerPage = async (req, res) => {
     try {
-      res.render("index");
+      res.render("auth/register",{layout:authenticationLayout});
     } catch (error) {
-      return res.status(500).json({
-        message: "something went wrong",
-      });
+      console.log(`Register Page Error: ${error}`);
+      res.redirect("/error");
     }
-  };
+};
+/*
+  Login Page 
+*/
+const loginPage = async (req, res) => {
+  try {
+    res.render("auth/login",{layout:authenticationLayout});
+  } catch (error) {
+    console.log(`Login Page Error: ${error}`);
+    res.redirect("/error");
+  }
+};
   
-  export { registerPage };
+export { registerPage,loginPage };
