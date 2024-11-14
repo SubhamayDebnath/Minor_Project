@@ -73,6 +73,10 @@ footer{
     rgba(0, 0, 0, 0.75) 75%
   );
 }
+.profile-image{
+  width: 8rem;
+  height: 8rem;
+}
 @media (max-width:992px) {
 
 }
