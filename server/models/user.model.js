@@ -14,6 +14,13 @@ const userSchema = new Schema(
       maxLength: [26, "Username must be less than 26 characters long"],
       trim: true,
     },
+    phone: {
+      type: String,
+      required: [true, "Phone number is required"],
+      match: [/^\+?[1-9]\d{1,14}$/, "Please fill a valid phone number"],
+      trim: true,
+      unique: true,
+    },
     email: {
       type: String,
       required: [true, "Email is required"],
@@ -24,11 +31,6 @@ const userSchema = new Schema(
         /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
         "Please fill a valid email address",
       ],
-    },
-    phone: {
-      type: String,
-      required: [true, "Phone number is required"],
-      match: [/^\+?[1-9]\d{1,14}$/, "Please fill a valid phone number"],
     },
     password: {
       type: String,

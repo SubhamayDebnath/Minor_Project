@@ -1,79 +1,78 @@
 <div class="auth-container">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 col-md-8 col-lg-5 mx-auto">
-                <div class="card p-4 my-5">
-                    <h1 class="fs-5 text-center mb-3">Sign in to your Account</h1>
-                    <% if (error_msg.length> 0) { %>
-                        <div class="alert alert-danger p-3 alert-dismissible fade show" role="alert">
-                            <span><%= error_msg %></span>
-                             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                         </div>
-                    <% } %>
-                    <form action="/api/v1/register" method="post" id="registerForm">
-                        <div class="form-group mb-3">
-                            <label for="username" class="form-label">Username</label>
-                            <input type="text" name="username" id="username" class="form-control" placeholder="Enter your username" required autocomplete="off">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="phone" class="form-label">Phone</label>
-                            <input type="text" name="phone" id="phone" minlength="10" class="form-control" placeholder="Enter your phone number" required autocomplete="off">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required autocomplete="off">
-                        </div>
-                        <div class="form-group mb-3">
-                            <label for="pasword" class="form-label">Password</label>
-                            <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required autocomplete="off">
-                        </div>
-                        <div class="mb-3">
-                            <span class="form-label">Location</span>
-                            <div class="input-group mt-2">
-                                <button type="button" class="btn btn-primary" onclick="getUserLocation()">Get your location</button>
-                            </div>
-                            <div class="input-group mt-2">
-                                <input type="hidden" id="latitude" name="latitude" required autocomplete="off">
-                                <input type="hidden" id="longitude" name="longitude" required autocomplete="off">
-                            </div>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100" id="submitBtn">
-                            <span id="submitText">Register</span>
-                            <span id="loadingSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none;"></span>
-                        </button>
-                    </form>
-                    <div class="mt-3">
-                        <p class="mb-0">Have a account? <a href="/login">Login now</a></p>
-                        <a href="/">Back to home</a>
-                    </div>
-                </div>
+  <div class="container">
+    <div class="row">
+      <div class="col-12 col-md-8 col-lg-5 mx-auto">
+        <div class="card p-4 my-5">
+          <h1 class="fs-5 text-center mb-3">Sign in to your Account</h1>
+          <% if (error_msg.length> 0) { %>
+          <div class="alert alert-danger p-3 alert-dismissible fade show" role="alert">
+            <span><%= error_msg %></span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+          <% } %>
+          <form action="/api/v1/register" method="post" id="registerForm">
+            <div class="form-group mb-3">
+              <label for="username" class="form-label">Username</label>
+              <input type="text" name="username" id="username" class="form-control" placeholder="Enter your username" required autocomplete="off">
             </div>
+            <div class="form-group mb-3">
+              <label for="phone" class="form-label">Phone</label>
+              <input type="text" name="phone" id="phone" minlength="10" class="form-control" placeholder="Enter your phone number" required autocomplete="off">
+            </div>
+            <div class="form-group mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" name="email" id="email" class="form-control" placeholder="Enter your email" required autocomplete="off">
+            </div>
+            <div class="form-group mb-3">
+              <label for="pasword" class="form-label">Password</label>
+              <input type="password" name="password" id="password" class="form-control" placeholder="Enter your password" required autocomplete="off">
+            </div>
+            <div class="mb-3">
+              <span class="form-label">Location</span>
+              <div class="input-group mt-2">
+                <button type="button" class="btn btn-primary" onclick="getUserLocation()">Get your location</button>
+              </div>
+              <div class="input-group mt-2">
+                <input type="hidden" id="latitude" name="latitude" required autocomplete="off">
+                <input type="hidden" id="longitude" name="longitude" required autocomplete="off">
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary w-100" id="submitBtn">
+              <span id="submitText">Register</span>
+              <span id="loadingSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none;"></span>
+            </button>
+          </form>
+          <div class="mt-3">
+            <p class="mb-0">Have a account? <a href="/login">Login now</a></p>
+            <a href="/">Back to home</a>
+          </div>
         </div>
+      </div>
     </div>
+  </div>
 </div>
 <script>
-    function getUserLocation() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(function(position) {
-                    let latitude = position.coords.latitude;
-                    let longitude = position.coords.longitude;
-                    document.getElementById("latitude").value = latitude;
-                    document.getElementById("longitude").value = longitude;
-                }, function(error) {
-                    alert("Geolocation is not available or denied.");
-                });
-            } else {
-                alert("Geolocation is not supported by this browser.");
-            }
-        }
-    
-        document.getElementById("registerForm").addEventListener("submit", function(event) {
-            const submitBtn = document.getElementById("submitBtn");
-            const loadingSpinner = document.getElementById("loadingSpinner");
-            const submitText = document.getElementById("submitText");
-            submitBtn.disabled = true; 
-            loadingSpinner.style.display = "inline-block";
-            submitText.textContent = "Submitting...";
-        })
+  function getUserLocation() {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        let latitude = position.coords.latitude;
+        let longitude = position.coords.longitude;
+        document.getElementById("latitude").value = latitude;
+        document.getElementById("longitude").value = longitude;
+      }, function(error) {
+        alert("Geolocation is not available or denied.");
+      });
+    } else {
+      alert("Geolocation is not supported by this browser.");
+    }
+  }
 
+  document.getElementById("registerForm").addEventListener("submit", function(event) {
+    const submitBtn = document.getElementById("submitBtn");
+    const loadingSpinner = document.getElementById("loadingSpinner");
+    const submitText = document.getElementById("submitText");
+    submitBtn.disabled = true;
+    loadingSpinner.style.display = "inline-block";
+    submitText.textContent = "Submitting...";
+  })
 </script>
