@@ -5,6 +5,12 @@ import fs from "fs/promises";
 import crypto from "crypto";
 config();
 import User from "../../models/user.model.js";
+const jwtSecret = process.env.JWT_SECRET;
+const cookieOption = {
+  maxAge: 24 * 60 * 60 * 1000,
+  httpOnly: true,
+  secure: true,
+};
 
 /*
     Register
