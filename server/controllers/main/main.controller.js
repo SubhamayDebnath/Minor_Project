@@ -13,6 +13,21 @@ const homePage = async (req, res) => {
     res.redirect("/error");
   }
 };
+/*
+  Profile Page 
+*/
+const profilePage=async(req,res)=>{
+  try {
+    const locals = {
+      title: "Profile - Disaster Management",
+      description: "Disaster Management",
+    };
+    res.render("profile",{locals,user:req.user});
+  } catch (error) {
+    console.log(`Profile Page Error: ${error}`);
+    res.redirect("/error");
+  }
+}
 
 /*
   Error Page 
@@ -24,4 +39,4 @@ const errorPage = async (req, res) => {
     layout: utilsLayout,
   });
 };
-export { homePage, errorPage };
+export { homePage, errorPage ,profilePage};

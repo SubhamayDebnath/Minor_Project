@@ -1,7 +1,7 @@
 <header class="header" id="header">
   <nav class="navbar navbar-expand-lg">
     <div class="container">
-      <a href="" class="navbar-brand fw-semibold fs-3">
+      <a href="/" class="navbar-brand fw-semibold fs-3">
         Disaster <span class="bg-warning text-black px-2 rounded">Hub</span>
       </a>
       <button class="navbar-toggler menu-btn border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,7 +31,7 @@
         </ul>
         <div class="d-flex align-items-center gap-2 mb-3 mb-lg-0">
           <% if(user){ %>
-          <a href="/me" class="btn btn-md btn-success">Profile</a>
+          <a href="/profile" class="btn btn-md btn-success">Profile</a>
           <% if(user.role === "SUPERUSER" || user.role === "ADMIN" || user.role === "RESCUER"){  %>
           <a href="/dashboard/" class="btn btn-md btn-warning">Dashboard</a>
           <% } %>

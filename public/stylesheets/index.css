@@ -30,6 +30,15 @@ a {
 main {
   padding: 0 !important;
 }
+.main-container{
+  min-height: calc(100dvh - 8rem);
+  height: 100%;
+}
+footer{
+  height: 8rem;
+  display: flex;
+  align-items: center;
+}
 .nav-link,
 .navbar-brand {
   color: #ffff !important;

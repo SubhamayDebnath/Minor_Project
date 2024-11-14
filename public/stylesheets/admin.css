@@ -3,3 +3,11 @@
 * {
   font-family: "Poppins", serif;
 }
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.nav-link:hover > div > i {
+  color: #ffffff;
+}
