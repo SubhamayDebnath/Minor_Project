@@ -6,7 +6,6 @@ import crypto from "crypto";
 config();
 import User from "../../models/user.model.js";
 
-
 /*
     Register
 */
@@ -18,6 +17,10 @@ const register = async (req, res, next) => {
       return res.redirect("/register");
     }
     const existingUser = await User.findOne({ $or: [{ email }, { phone }] });
+    if (existingUser) {
+      req.flash("error_msg", "Email already in use");
+      return res.redirect("/register");
+    }
     if (existingUser.email === email && existingUser.phone === phone) {
       req.flash("error_msg", "Email and Phone already in use");
       return res.redirect("/register");
@@ -48,7 +51,9 @@ const register = async (req, res, next) => {
     await newUser.save();
     res.redirect("/login");
   } catch (error) {
-    console.log(`Login error : ${error}`);
+    console.log(`Register error : ${error}`);
     res.redirect("/error");
   }
 };
+
+export { register };

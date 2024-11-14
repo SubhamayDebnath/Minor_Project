@@ -11,6 +11,7 @@ config();
 
 import mainRoutes from './server/routes/main/main.routes.js'
 import authRoutes from "./server/routes/auth/auth.routes.js"
+import DBConnection from "./server/config/DBConnection.js";
 
 const app = express();
 const PORT = process.env.PORT;
@@ -50,5 +51,6 @@ app.use("*", (req, res) => {
 });
 
 app.listen(PORT, async () => {
+  DBConnection();
   console.log(`server is running on port http://localhost:${PORT}`);
 });
