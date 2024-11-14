@@ -7,31 +7,19 @@ a {
   text-decoration: none;
   color: inherit !;
 }
-
-.header {
-  position: fixed;
-  top: 0;
-  width: 100dvw;
-  left: 0;
-  right: 0;
-  z-index: 99999;
-  transition: background-color 0.3s ease;
-}
-.header.active{
-    background-color: #000000 !important;
+body{
+  font-weight: 400;
 }
 .navbar-toggler:focus {
   outline: none !important;
   box-shadow: none !important;
 }
 
-
-
 main {
   padding: 0 !important;
 }
 .main-container{
-  min-height: calc(100dvh - 8rem);
+  min-height: calc(100dvh - 12rem);
   height: 100%;
 }
 footer{
@@ -53,7 +41,7 @@ footer{
   color: #0d6efd !important;
 }
 .hero-section {
-  height: 100dvh;
+  height: 90dvh;
   padding: 0;
 }
 .hero-container {
