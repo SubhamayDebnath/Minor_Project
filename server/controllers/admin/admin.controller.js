@@ -7,7 +7,7 @@ const addSkill=async (req,res) => {
             return res.redirect("/dashboard/skills");
         }
         const skill = await Skill.find({name:name});
-        if(skill){
+        if(!skill){
             req.flash("error_msg", "Skill name is already exist");
             return res.redirect("/dashboard/skills");
         }
@@ -40,7 +40,7 @@ const updateSkill=async(req,res)=>{
         const updatedSkill=await Skill.findByIdAndUpdate(skillId,{
             name:name
         })
-        if(!updateSkill){
+        if(!updatedSkill){
             req.flash("error_msg", "Failed to update skill");
             return res.redirect("/dashboard/skills");
         }
@@ -52,7 +52,23 @@ const updateSkill=async(req,res)=>{
         res.redirect("/error");
     }
 }
+const deleteSkill=async (req,res) => {
+    try {
+        const skillId=req.params.id;
+        const deletedSkill= await Skill.findByIdAndDelete(skillId);
+        if(!deletedSkill){
+            req.flash("error_msg", "Failed to delete skill");
+            return res.redirect("/dashboard/skills");
+        }
+        req.flash("success_msg", "Skill deleted successfully");
+        return res.redirect("/dashboard/skills");
+    } catch (error) {
+        console.log(`Skill Delete error : ${error}`);
+        res.redirect("/error");
+    }
+}
 export{
     addSkill,
-    updateSkill
+    updateSkill,
+    deleteSkill
 }

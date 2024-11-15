@@ -40,7 +40,7 @@ const userSchema = new Schema(
     },
     role: {
       type: String,
-      enum: ["USER", "ADMIN", "SUPERUSER", "RESCUER"],
+      enum: ["USER", "ADMIN", "SUPERUSER"],
       default: "USER",
     },
     status: {
@@ -50,6 +50,10 @@ const userSchema = new Schema(
     isAuthenticated: {
       type: Boolean,
       default: false,
+    },
+    isRESCUER:{
+      type:Boolean,
+      default:false
     },
     bloodGroup: {
         type: String,

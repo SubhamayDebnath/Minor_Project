@@ -41,10 +41,48 @@ const skillsPage =async (req,res) => {
             title: "Dashboard - Skills",
             description: "Welcome to Dashboard skills",
         };
-        const skills = await Skill.find().sort({ createdAt: -1 });
-        res.render("admin/skills",{locals,layout:adminLayout,user:req.user,skills})
+        let perPage = 6;
+        let page = req.query.page || 1;
+        const skills = await Skill.find()
+        .sort({ createdAt: -1 })
+        .skip(perPage * page - perPage)
+        .limit(perPage)
+        .exec();
+        const count = await Skill.countDocuments({});
+        const totalPages = Math.ceil(count / perPage);
+        const nextPage = parseInt(page) + 1;
+        const hasNextPage = nextPage <= Math.ceil(count / perPage);
+        const prevPage = page > 1 ? page - 1 : null;
+
+        res.render("admin/skills",{
+            locals,
+            layout:adminLayout
+            ,user:req.user,
+            skills,
+            current: page,
+            nextPage: hasNextPage ? nextPage : null,
+            prevPage,
+            totalPages,
+        })
     } catch (error) {
         console.log(`Skills Page error : ${error}`);
+        res.redirect("/error");
+    }
+}
+/*
+    Skill update form page
+*/ 
+const skillUpdateForm =async (req,res) => {
+    try {
+        const locals = {
+            title: "Dashboard - Skills update",
+            description: "Welcome to Dashboard skills update",
+        };
+        const skillID=req.params.id;
+        const updateSkill=await Skill.findById(skillID);
+        res.render("admin/form/update-skill",{locals,layout:adminLayout,user:req.user,updateSkill})
+    } catch (error) {
+        console.log(`Skills update form page error : ${error}`);
         res.redirect("/error");
     }
 }
@@ -67,5 +105,6 @@ export{
     dashboard,
     usersPage,
     skillsPage,
-    missingPersonPage
+    missingPersonPage,
+    skillUpdateForm
 }

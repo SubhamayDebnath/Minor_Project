@@ -1,0 +1,34 @@
+<div class="container p-3">
+    <div class="row">
+        <div class="col-lg-6 col-md-8 col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h4>Update Skill</h4>
+                </div>
+                <div class="card-body">
+                    <form action="/dashboard/api/v1/skill/update?_method=PUT" method="post" id="registerForm">
+                        <input type="hidden" name="skillId" value="<%-updateSkill._id %>">
+                        <div class="form-group mb-3">
+                            <label for="name" class="form-label">Skill Name</label>
+                            <input type="text" name="name" id="name" value="<%-updateSkill.name%>" class="form-control" placeholder="Enter skill name" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100" id="submitBtn">
+                            <span id="submitText">Save</span>
+                            <span id="loadingSpinner" class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none;"></span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById("registerForm").addEventListener("submit", function(event) {
+      const submitBtn = document.getElementById("submitBtn");
+      const loadingSpinner = document.getElementById("loadingSpinner");
+      const submitText = document.getElementById("submitText");
+      submitBtn.disabled = true;
+      loadingSpinner.style.display = "inline-block";
+      submitText.textContent = "Submitting...";
+    })
+  </script>
