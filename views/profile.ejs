@@ -2,6 +2,18 @@
   <div class="container py-5">
     <div class="row">
       <div class="col-lg-6 col-md-8 mx-auto">
+        <% if (error_msg.length> 0) { %>
+        <div class="alert alert-danger p-3 alert-dismissible fade show" role="alert">
+          <span><%= error_msg %></span>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <% } %>
+        <% if (success_msg.length> 0) { %>
+        <div class="alert alert-success p-3 alert-dismissible fade show" role="alert">
+          <span> <%= success_msg %></span>
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <% } %>
         <div class="card shadow-sm p-4">
           <div class="card-header p-0 border-bottom-0 bg-white">
             <div class="profile-image rounded-circle overflow-hidden">
@@ -39,7 +51,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="/api/v1/profile/add" method="post"  id="registerForm">
+        <form action="/api/v1/profile/add" method="post" id="registerForm">
           <!-- enctype="multipart/form-data" -->
           <div class="form-image-container rounded-circle overflow-hidden mx-auto" id="form-image-container">
             <img src="" id="previewImage" class="w-100 h-100 object-fit-contain">
