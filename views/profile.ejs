@@ -1,38 +1,36 @@
 <section>
-    <div class="container">
-        <div class="card my-2">
-            <div class="row">
-                <div class="col-lg-4 col-md-6 col-12">
-                    <div class="card border-0">
-                        <div class="card-header border-bottom-0 bg-white">
-                            <div class="profile-image rounded-circle overflow-hidden mx-auto">
-                                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="profile image" class="w-100 h-100 img-fluid">
-                            </div>
-                            <h5 class="my-3 text-center"><%-user.username  %></h5>
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <div class="card shadow-sm p-4">
+                    <div class="card-header p-0 border-bottom-0 bg-white">
+                        <div class="profile-image rounded-circle overflow-hidden">
+                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="profile image" class="w-100 h-100 img-fluid">
                         </div>
-                        <div class="card-body">
-                            <ul class="list-unstyled">
-                                <li><strong>Phone:</strong> <%- user.phone %></li>
-                                <li><strong>Email:</strong> <%- user.email %></li>
-                                <li><strong>Blood Group:</strong> <% if(user.bloodGroup!=='Unknown'){%><%-user.bloodGroup%><%}else{%>not added<% } %> </li>
-                                <li><strong>Allergies:</strong> <% if(user.allergies.length){%><%-user.allergies%><%}else{%>not added<% } %> </li>
-                                <li><strong>Medical Problems:</strong> <% if(user.medicalProblems.length){%><%-user.medicalProblems%><%}else{%>not added<% } %> </li>
-                                <li><strong>Skills:</strong> <% if(user.skills.length){%><%-user.skills%><%}else{%>not added<% } %> </li>
-                                <li><strong>Available:</strong> <% if(user.true){%> Yes <%}else{%>No<% } %></li>
-                            </ul>
-                            <div class="d-flex align-items-center flex-wrap gap-3">
-                                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal">Join as Rescuer</button>
-                                <a href="" class="btn btn-primary">Edit Profile</a>
-                                <a href="" class="btn btn-danger">Log Out</a>
-                            </div>
+                        <h5 class="my-2"><%-user.username  %></h5>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="list-unstyled">
+                            <li><strong>Phone:</strong> <%- user.phone %></li>
+                            <li><strong>Email:</strong> <%- user.email %></li>
+                            <li><strong>Blood Group:</strong> <% if(user.bloodGroup!=='Unknown'){%><%-user.bloodGroup%><%}else{%>not added<% } %> </li>
+                            <li><strong>Allergies:</strong> <% if(user.allergies.length){%><%-user.allergies%><%}else{%>not added<% } %> </li>
+                            <li><strong>Medical Problems:</strong> <% if(user.medicalProblems.length){%><%-user.medicalProblems%><%}else{%>not added<% } %> </li>
+                            <li><strong>Skills:</strong> <% if(user.skills.length){%><%-user.skills%><%}else{%>not added<% } %> </li>
+                            <li><strong>Available:</strong> <% if(user.true){%> Yes <%}else{%>No<% } %></li>
+                        </ul>
+                        <div>
+                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal">Join as Rescuer</button>
+                            <a href="" class="btn btn-primary">Edit Profile</a>
+                            <a href="" class="btn btn-danger">Log Out</a>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-8 col-md-6 col-12 bg-primary">.</div>
             </div>
         </div>
     </div>
 </section>
+
   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
