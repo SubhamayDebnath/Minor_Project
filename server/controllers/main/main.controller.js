@@ -22,7 +22,13 @@ const profilePage=async(req,res)=>{
       title: "Profile - Disaster Management",
       description: "Disaster Management",
     };
-    res.render("profile",{locals,user:req.user});
+    if(req.user){
+      res.render("profile",{locals,user:req.user});
+    }else{
+      req.flash("error_msg", "Please log in to continue this page.");
+      return res.redirect("/login");
+    }
+
   } catch (error) {
     console.log(`Profile Page Error: ${error}`);
     res.redirect("/error");
