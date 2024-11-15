@@ -9,8 +9,8 @@ import { config } from "dotenv";
 import fs from "fs/promises";
 config();
 import User from "../../models/user.model.js";
-import cloudinary from "../utils/cloudinary.js";
-import sendEmail from "../utils/sendMail.js";
+import cloudinary from "../../utils/cloudinary.js";
+import sendEmail from "../../utils/sendMail.js";
 
 const updateOtherDetails=async (req,res) => {
     try {
