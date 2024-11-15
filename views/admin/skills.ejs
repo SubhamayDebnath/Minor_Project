@@ -7,7 +7,7 @@
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-table" viewBox="0 0 16 16">
               <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2zm15 2h-4v3h4zm0 4h-4v3h4zm0 4h-4v3h3a1 1 0 0 0 1-1zm-5 3v-3H6v3zm-5 0v-3H1v2a1 1 0 0 0 1 1zm-4-4h4V8H1zm0-4h4V4H1zm5-3v3h4V4zm4 4H6v3h4z" />
             </svg>
-          </span>Users
+          </span>Skills
         </h5>
       </div>
     </div>
@@ -18,61 +18,17 @@
             <tr>
               <th scope="col">No</th>
               <th scope="col">Name</th>
-              <th scope="col">Phone No</th>
-              <th scope="col">Email</th>
-              <th scope="col">Role</th>
               <th scope="col">Status</th>
-              <th scope="col">Skill</th>
-              <th scope="col">Availability</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
-            <% if(users.length> 0){ %>
-            <% users.forEach((data,index)=> { %>
             <tr>
-              <th scope="row"><%- index+1 %></th>
-              <td scope="row"><%- data.username %></td>
-              <td scope="row">
-                <div class="number-container">
-                  <%- data.phone %>
-                </div>
-              </td>
-              <td scope="row"><%- data.email %></td>
-              <td scope="row">
-                <% if(data.role==='SUPERUSER' ) { %>
-                <span class="badge p-2 rounded text-bg-danger">Super User</span>
-                <% }else if(data.role==='ADMIN' ) {%>
-                <span class="badge p-2 rounded text-bg-warning">Admin</span>
-                <% }else if(data.role==='RESCUER' ){ %>
-                <span class="badge p-2 rounded text-bg-success">Rescuer</span>
-                <% }else{ %>
-                <span class="badge p-2 rounded text-bg-primary">User</span>
-                <% } %>
-              </td>
-              <td scope="row">
-                <% if(data.status==='ACTIVE' ) { %>
-                <span class="badge p-2 rounded text-bg-success">Active</span>
-                <%}else { %>
-                <span class="badge p-2 rounded text-bg-success">Inactive</span>
-                <% } %>
-              </td>
-              <td scope="row">
-                <% if( data.skills.length> 0 ) { %>
-                <% }else{ %>
-                <span>Unknown</span>
-                <% } %>
-              </td>
-              <td scope="row">
-                <% if(data.isAvailable) { %>
-                <span class="badge p-2 rounded text-bg-primary">Available</span>
-                <%}else { %>
-                <span class="badge p-2 rounded text-bg-danger">Not Available</span>
-                <% } %>
-              </td>
-              <td scope="row">
+              <th scope="row">1</th>
+              <td>Hello</td>
+              <td>Active</td>
+              <td>
                 <div class="d-flex align-items-center gap-2">
-                  <button class="btn btn-success btn-sm">view</button>
                   <button class="btn btn-primary btn-sm">Edit</button>
                   <form action="">
                     <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -80,14 +36,6 @@
                 </div>
               </td>
             </tr>
-            <% }); %>
-            <% }else{ %>
-            <tr>
-              <td colspan="9" class="px-2 py-4 text-center ">
-                <p class="mb-0 fs-4 fw-semibold">No User Found!</p>
-              </td>
-            </tr>
-            <% } %>
           </tbody>
         </table>
       </div>

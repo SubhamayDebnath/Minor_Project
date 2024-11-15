@@ -18,7 +18,7 @@ const dashboard=async (req,res) => {
 /*
     Users page
 */ 
-const users =async (req,res) => {
+const usersPage =async (req,res) => {
     try {
         const locals = {
             title: "Dashboard - Users",
@@ -31,7 +31,23 @@ const users =async (req,res) => {
         res.redirect("/error");
     }
 }
+/*
+    Skills page
+*/ 
+const skillsPage =async (req,res) => {
+    try {
+        const locals = {
+            title: "Dashboard - Skills",
+            description: "Welcome to Dashboard skills",
+        };
+        res.render("admin/skills",{locals,layout:adminLayout,user:req.user})
+    } catch (error) {
+        console.log(`Skills Page error : ${error}`);
+        res.redirect("/error");
+    }
+}
 export{
     dashboard,
-    users
+    usersPage,
+    skillsPage
 }

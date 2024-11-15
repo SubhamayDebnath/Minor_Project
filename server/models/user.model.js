@@ -44,9 +44,8 @@ const userSchema = new Schema(
       default: "USER",
     },
     status: {
-      type: String,
-      enum: ["ACTIVE", "INACTIVE"],
-      default: "ACTIVE",
+      type: Boolean,
+      default: true, 
     },
     isAuthenticated: {
       type: Boolean,

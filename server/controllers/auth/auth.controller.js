@@ -51,7 +51,7 @@ const register = async (req, res, next) => {
       return res.redirect("/register");
     }
     await newUser.save();
-    res.redirect(201,"/login");
+    res.redirect("/login");
   } catch (error) {
     console.log(`Register error : ${error}`);
     res.redirect("/error");
@@ -79,8 +79,9 @@ const login=async (req,res) => {
       req.flash("error_msg", "Invalid email or password");
       return res.redirect("/login");
     }
-    if (user.isAuthenticated === false) {
-      res.redirect("/register");
+    if (!user.isAuthenticated) {
+      req.flash("error_msg", "Please active your account");
+      res.redirect("/login");
     } else {
       const token = jwt.sign({ userId: user._id }, jwtSecret);
       res.cookie("token", token, cookieOption);
