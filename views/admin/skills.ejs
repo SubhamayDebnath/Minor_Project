@@ -9,7 +9,22 @@
             </svg>
           </span>Skills
         </h5>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Add Skill
+        </button>
       </div>
+      <% if (error_msg.length> 0) { %>
+      <div class="alert alert-danger p-3 mt-3 alert-dismissible fade show" role="alert">
+        <span><%= error_msg %></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <% } %>
+      <% if (success_msg.length> 0) { %>
+      <div class="alert alert-success p-3 mt-3 alert-dismissible fade show" role="alert">
+        <span> <%= success_msg %></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      <% } %>
     </div>
     <div class="card-body">
       <div class="table-responsive">
@@ -49,3 +64,36 @@
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Skill</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/dashboard/api/v1/skill/add" method="post" id="skillForm">
+          <div class="form-group mb-3">
+            <label for="name" class="form-label">Skill name <span class="text-danger">*</span></label>
+            <input type="text" name="name" id="name" class="form-control" placeholder="Enter skill name" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" id="saveButton">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const saveButton = document.getElementById('saveButton');
+  const skillForm = document.getElementById('skillForm');
+  saveButton.addEventListener('click', () => {
+    skillForm.submit();
+    const modal = bootstrap.Modal.getInstance(document.getElementById('exampleModal'));
+    modal.hide();
+    skillForm.reset();
+  })
+</script>
