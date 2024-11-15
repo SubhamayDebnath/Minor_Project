@@ -12,6 +12,7 @@ config();
 import mainRoutes from './server/routes/main/main.routes.js'
 import authRoutes from "./server/routes/auth/auth.routes.js"
 import adminRoutes from "./server/routes/admin/admin.routes.js"
+import userRoutes from "./server/routes/user/user.routes.js"
 import DBConnection from "./server/config/DBConnection.js";
 
 const app = express();
@@ -48,6 +49,7 @@ app.use((req, res, next) => {
 app.use("",mainRoutes);
 app.use("",authRoutes)
 app.use("/dashboard",adminRoutes)
+app.use("/api/v1",userRoutes)
 app.use("*", (req, res) => {
   res.status(404).send("Page Not Found");
 });

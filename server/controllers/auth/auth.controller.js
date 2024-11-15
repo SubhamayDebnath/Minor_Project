@@ -85,7 +85,12 @@ const login=async (req,res) => {
     } else {
       const token = jwt.sign({ userId: user._id }, jwtSecret);
       res.cookie("token", token, cookieOption);
-      res.redirect("/dashboard");
+      if(user.role==='ADMIN' || user.role==='SUPERUSER' || user.isRescuer === true){
+        res.redirect("/dashboard");
+      }else{
+        res.redirect("/");
+      }
+
     }
   } catch (error) {
     console.log(`Login error : ${error}`);

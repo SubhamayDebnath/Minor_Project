@@ -67,6 +67,7 @@ const deleteSkill=async (req,res) => {
         res.redirect("/error");
     }
 }
+
 export{
     addSkill,
     updateSkill,
