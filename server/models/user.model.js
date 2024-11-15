@@ -51,7 +51,7 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
-    isRESCUER:{
+    isRescuer:{
       type:Boolean,
       default:false
     },
