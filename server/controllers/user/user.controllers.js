@@ -52,7 +52,19 @@ const updateOtherDetails=async (req,res) => {
             isRescuer:isRescuer===true
         })
         if(!user){
-
+            req.flash("error_msg", "User not found");
+            return res.redirect("/profile");
+        }
+        if(isRescuer){
+            const email=req.user.email;
+            const subject = `Submit your application`;
+            const body = `Hi, ${req.user.username} \n\n\n.Submit your application, and our admin team will review it and contact you via email with the next steps.\n\n\nThank you`;
+            await sendEmail(email, subject, body);
+            req.flash("success_msg", "Application submitted successfully");
+            return res.redirect("/profile");
+        }else{
+            req.flash("success_msg", "Profile updated successfully");
+            return res.redirect("/profile");
         }
     } catch (error) {
         console.log(`Other details page error : ${error}`);
