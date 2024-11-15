@@ -1,3 +1,4 @@
+import User from "../../models/user.model.js";
 const adminLayout = "../views/layouts/admin";
 /*
     Dashboard page
@@ -23,7 +24,8 @@ const users =async (req,res) => {
             title: "Dashboard - Users",
             description: "Welcome to Dashboard users",
         };
-        res.render("admin/users",{locals,layout:adminLayout,user:req.user})
+        const users= await User.find().sort({createdAt:-1});
+        res.render("admin/users",{locals,layout:adminLayout,user:req.user,users})
     } catch (error) {
         console.log(`Users Page error : ${error}`);
         res.redirect("/error");

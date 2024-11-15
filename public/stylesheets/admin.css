@@ -14,3 +14,22 @@
 .nav-link:hover{
   background-color: #171717;
 }
+.number-container{
+  width: 10rem;
+  text-align: center;
+}
+th{
+  font-size: 0.95rem;
+  font-weight: 500;
+}
+td{
+  font-size: 0.85rem;
+}
+.table-select-form{
+  width: 5.5rem;
+  
+}
+.table-select-form > select{
+  font-size: 0.85rem;
+  padding: 5px;
+}
