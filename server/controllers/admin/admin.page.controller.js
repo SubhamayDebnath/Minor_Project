@@ -1,4 +1,5 @@
 import User from "../../models/user.model.js";
+import Skill from "../../models/skill.model.js";
 const adminLayout = "../views/layouts/admin";
 /*
     Dashboard page
@@ -40,14 +41,31 @@ const skillsPage =async (req,res) => {
             title: "Dashboard - Skills",
             description: "Welcome to Dashboard skills",
         };
-        res.render("admin/skills",{locals,layout:adminLayout,user:req.user})
+        const skills = await Skill.find().sort({ createdAt: -1 });
+        res.render("admin/skills",{locals,layout:adminLayout,user:req.user,skills})
     } catch (error) {
         console.log(`Skills Page error : ${error}`);
+        res.redirect("/error");
+    }
+}
+/*
+    Skills page
+*/ 
+const missingPersonPage =async (req,res) => {
+    try {
+        const locals = {
+            title: "Dashboard - Missing Person",
+            description: "Welcome to Dashboard Missing Person",
+        };
+        res.render("admin/missing-person",{locals,layout:adminLayout,user:req.user})
+    } catch (error) {
+        console.log(`Missing Person Page error : ${error}`);
         res.redirect("/error");
     }
 }
 export{
     dashboard,
     usersPage,
-    skillsPage
+    skillsPage,
+    missingPersonPage
 }

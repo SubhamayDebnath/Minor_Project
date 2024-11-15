@@ -14,6 +14,21 @@ const homePage = async (req, res) => {
   }
 };
 /*
+  Missing Person Page 
+*/
+const missingPersonPage = async (req, res) => {
+  try {
+    const locals = {
+      title: "Disaster Management",
+      description: "Disaster Management",
+    };
+    res.render("missing-person",{locals,user:req.user});
+  } catch (error) {
+    console.log(`Missing Person Page Error: ${error}`);
+    res.redirect("/error");
+  }
+};
+/*
   Profile Page 
 */
 const profilePage=async(req,res)=>{
@@ -45,4 +60,4 @@ const errorPage = async (req, res) => {
     layout: utilsLayout,
   });
 };
-export { homePage, errorPage ,profilePage};
+export { homePage, errorPage,missingPersonPage ,profilePage};

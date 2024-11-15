@@ -33,15 +33,27 @@
             <tr>
               <th scope="col">No</th>
               <th scope="col">Name</th>
+              <th scope="col">Timestamp</th>
               <th scope="col">Status</th>
               <th scope="col">Action</th>
             </tr>
           </thead>
           <tbody>
+            <% if(skills.length > 0){ %>
+            <% skills.forEach((data,index)=> { %>
             <tr>
-              <th scope="row">1</th>
-              <td>Hello</td>
-              <td>Active</td>
+              <th scope="row"><%- index+1  %></th>
+              <td class="text-capitalize"><%- data.name  %></td>
+              <td>
+                <%= new Date(data.createdAt).toDateString() %>
+              </td>
+              <td>
+                <% if(data.isActive){ %>
+                <span class="badge p-2 rounded text-bg-primary">Active</span>
+                <% }else{ %>
+                <span class="badge p-2 rounded text-bg-danger">In Active</span>
+                <% } %>
+              </td>
               <td>
                 <div class="d-flex align-items-center gap-2">
                   <button class="btn btn-primary btn-sm">Edit</button>
@@ -51,6 +63,15 @@
                 </div>
               </td>
             </tr>
+            <% }) %>
+            <% }else{ %>
+            <tr>
+              <td colspan="5" class="px-2 py-4 text-center ">
+                <p class="mb-0 fs-4 fw-semibold">No Skill Found!</p>
+              </td>
+            </tr>
+            <% } %>
+
           </tbody>
         </table>
       </div>
