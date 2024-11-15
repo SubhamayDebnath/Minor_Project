@@ -22,7 +22,7 @@
             <div>
               <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal">Join as Rescuer</button>
               <a href="" class="btn btn-primary">Edit Profile</a>
-              <a href="" class="btn btn-danger">Log Out</a>
+              <a href="/logout" class="btn btn-danger">Log Out</a>
             </div>
           </div>
         </div>
@@ -41,7 +41,7 @@
       <div class="modal-body">
         <form action="">
           <div class="form-image-container rounded-circle overflow-hidden mx-auto" id="form-image-container">
-            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Preview Image" id="preview-image" class="w-100 h-100 object-fit-contain">
+            <img src="" id="previewImage" class="w-100 h-100 object-fit-contain">
           </div>
           <div class="form-group">
             <label for="avatar" class="form-label">Upload Image<span class="text-danger">*</span></label>
@@ -102,7 +102,7 @@
         const img = document.getElementById('previewImage');
         img.src = e.target.result;
         img.classList.remove('hidden');
-        document.getElementById('imageLabel').classList.add('hidden')
+        document.getElementById('form-image-container').classList.add('show')
       }
       reader.readAsDataURL(file);
     }

@@ -93,4 +93,19 @@ const login=async (req,res) => {
   }
 }
 
-export { register,login };
+/*
+logout
+*/ 
+const logout = async (req, res, next) => {
+  try {
+    if(req.cookies.token){
+      res.clearCookie("token");
+      return res.redirect("/login");
+    }
+  } catch (error) {
+    console.log(`Logout error : ${error}`);
+    res.redirect("/error");
+  }
+};
+
+export { register,login ,logout};

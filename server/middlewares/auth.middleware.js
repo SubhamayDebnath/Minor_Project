@@ -74,4 +74,5 @@ const isAuthenticated = async (req, res, next) => {
   }
 };
 
+
 export { isLoggedIn, isAuthorized, isAuthenticated };
