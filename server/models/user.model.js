@@ -1,5 +1,6 @@
 import { Schema, model } from "mongoose";
-
+import mongoose from "mongoose";
+import Skill from "./skill.model.js"
 // Define the User schema
 const userSchema = new Schema(
   {
@@ -69,20 +70,8 @@ const userSchema = new Schema(
         default: [],
     },
     skills: {
-        type: [String],
-        enum: [
-            "First Aid",
-            "Search and Rescue",
-            "Firefighting",
-            "Medical Assistance",
-            "Communication",
-            "Logistics Support",
-            "Disaster Relief",
-            "Evacuation Assistance",
-            "Water Rescue",
-            "Mental Health Support",
-        ],
-        default: [],
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Skill',
      },
     isAvailable: {
         type: Boolean,

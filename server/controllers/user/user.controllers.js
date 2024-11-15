@@ -15,7 +15,8 @@ import sendEmail from "../../utils/sendMail.js";
 const updateOtherDetails=async (req,res) => {
     try {
         const {bloodGroup,allergies,medicalProblems,skills,isAvailable,isRescuer}=req.body;
-        if(!allergies || medicalProblems){
+        console.log(req.body);
+        if(!allergies || !medicalProblems){
             req.flash("error_msg", "Please fill in all fields");
             return res.redirect("/profile");
         }
@@ -42,8 +43,12 @@ const updateOtherDetails=async (req,res) => {
             image = cloudinaryResult.secure_url;
             public_id = cloudinaryResult.public_id;
             fs.rm(req.file.path);
-          }
+        }
         const user = await User.findByIdAndUpdate(req.user._id, {
+            avatar:{
+                public_id:public_id,
+                secure_url:image
+            },
             bloodGroup:bloodGroup,
             allergies:allergies.split(","),
             medicalProblems:medicalProblems.split(","),
