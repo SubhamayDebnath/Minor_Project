@@ -1,3 +1,4 @@
+import Skill from '../../models/skill.model.js'
 /*
   Home Page 
 */
@@ -38,8 +39,10 @@ const profilePage=async(req,res)=>{
       description: "Disaster Management",
     };
     if(req.user){
-      res.render("profile",{locals,user:req.user});
+      const skills = await Skill.find();
+      res.render("profile",{locals,user:req.user,skills});
     }else{
+  
       req.flash("error_msg", "Please log in to continue this page.");
       return res.redirect("/login");
     }

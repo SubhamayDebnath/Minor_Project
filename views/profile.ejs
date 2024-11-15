@@ -1,88 +1,110 @@
 <section>
-    <div class="container py-5">
-        <div class="row">
-            <div class="col-lg-6 col-md-8 mx-auto">
-                <div class="card shadow-sm p-4">
-                    <div class="card-header p-0 border-bottom-0 bg-white">
-                        <div class="profile-image rounded-circle overflow-hidden">
-                            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="profile image" class="w-100 h-100 img-fluid">
-                        </div>
-                        <h5 class="my-2"><%-user.username  %></h5>
-                    </div>
-                    <div class="card-body p-0">
-                        <ul class="list-unstyled">
-                            <li><strong>Phone:</strong> <%- user.phone %></li>
-                            <li><strong>Email:</strong> <%- user.email %></li>
-                            <li><strong>Blood Group:</strong> <% if(user.bloodGroup!=='Unknown'){%><%-user.bloodGroup%><%}else{%>not added<% } %> </li>
-                            <li><strong>Allergies:</strong> <% if(user.allergies.length){%><%-user.allergies%><%}else{%>not added<% } %> </li>
-                            <li><strong>Medical Problems:</strong> <% if(user.medicalProblems.length){%><%-user.medicalProblems%><%}else{%>not added<% } %> </li>
-                            <li><strong>Skills:</strong> <% if(user.skills.length){%><%-user.skills%><%}else{%>not added<% } %> </li>
-                            <li><strong>Available:</strong> <% if(user.true){%> Yes <%}else{%>No<% } %></li>
-                        </ul>
-                        <div>
-                            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal">Join as Rescuer</button>
-                            <a href="" class="btn btn-primary">Edit Profile</a>
-                            <a href="" class="btn btn-danger">Log Out</a>
-                        </div>
-                    </div>
-                </div>
+  <div class="container py-5">
+    <div class="row">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <div class="card shadow-sm p-4">
+          <div class="card-header p-0 border-bottom-0 bg-white">
+            <div class="profile-image rounded-circle overflow-hidden">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="profile image" class="w-100 h-100 img-fluid">
             </div>
-        </div>
-    </div>
-</section>
-
-  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h1 class="modal-title fs-5" id="exampleModalLabel">Add Information</h1>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <form action="">
-                <div class="form-group mb-3">
-                    <label for="bloodGroup" class="form-label">Blood Group <span class="text-danger">*</span></label>
-                    <select name="bloodGroup" class="form-control" id="bloodGroup" >
-                        <option value="a+">A+</option>
-                    </select>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="allergies" class="form-label"> Allergies <span class="text-danger">*</span></label>
-                    <input type="text" name="allergies" id="allergies" class="form-control"  placeholder="Enter your allergies details  e.g-egg,fish" required>
-                </div>
-                <div class="form-group mb-3">
-                    <label for=" medicalProblems" class="form-label"> Medical Problems <span class="text-danger">*</span></label>
-                    <input type="text" name=" medicalProblems" id=" medicalProblems" class="form-control"  placeholder="Enter your medical problems" required>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="skills" class="form-label"> Skills <span class="text-danger">*</span></label>
-                    <select name="skills" class="form-control" id="skills" multiple >
-                        <option value="a+">A+</option>
-                        <option value="a+">A+</option>
-                        <option value="a+">A+</option>
-                        <option value="a+">A+</option>
-                    </select>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="isAvailable" class="form-label">Are you now available?</label>
-                    <select name="isAvailable" id="isAvailable" class="form-select"> 
-                        <option value="true">Yes</option>
-                        <option value="false" selected>No</option>
-                    </select>
-                </div>
-                <div class="form-group mb-3">
-                    <label for="isRescuer" class="form-label">Are you want to be rescuer?</label>
-                    <select name="isRescuer" id="isRescuer" class="form-select">
-                        <option value="true">Yes</option>
-                        <option value="false" selected>No</option>
-                    </select>
-                </div>
-            </form>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save</button>
+            <h5 class="my-2"><%-user.username  %></h5>
+          </div>
+          <div class="card-body p-0">
+            <ul class="list-unstyled">
+              <li><strong>Phone:</strong> <%- user.phone %></li>
+              <li><strong>Email:</strong> <%- user.email %></li>
+              <li><strong>Blood Group:</strong> <% if(user.bloodGroup!=='Unknown'){%><%-user.bloodGroup%><%}else{%>not added<% } %> </li>
+              <li><strong>Allergies:</strong> <% if(user.allergies.length){%><%-user.allergies%><%}else{%>not added<% } %> </li>
+              <li><strong>Medical Problems:</strong> <% if(user.medicalProblems.length){%><%-user.medicalProblems%><%}else{%>not added<% } %> </li>
+              <li><strong>Skills:</strong> <% if(user.skills.length){%><%-user.skills%><%}else{%>not added<% } %> </li>
+              <li><strong>Available:</strong> <% if(user.true){%> Yes <%}else{%>No<% } %></li>
+            </ul>
+            <div>
+              <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#exampleModal">Join as Rescuer</button>
+              <a href="" class="btn btn-primary">Edit Profile</a>
+              <a href="" class="btn btn-danger">Log Out</a>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
+</section>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog  modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Add Information</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="">
+          <div class="form-image-container rounded-circle overflow-hidden mx-auto" id="form-image-container">
+            <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="Preview Image" id="preview-image" class="w-100 h-100 object-fit-contain">
+          </div>
+          <div class="form-group">
+            <label for="avatar" class="form-label">Upload Image<span class="text-danger">*</span></label>
+            <input type="file" class="form-control" name="avatar" id="avatar" required>
+          </div>
+
+          <div class="form-group mb-3">
+            <label for="bloodGroup" class="form-label">Blood Group <span class="text-danger">*</span></label>
+            <select name="bloodGroup" class="form-control" id="bloodGroup">
+              <option value="a+">A+</option>
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="allergies" class="form-label"> Allergies <span class="text-danger">*</span></label>
+            <input type="text" name="allergies" id="allergies" class="form-control" placeholder="Enter your allergies details  e.g-egg,fish" required>
+          </div>
+          <div class="form-group mb-3">
+            <label for=" medicalProblems" class="form-label"> Medical Problems <span class="text-danger">*</span></label>
+            <input type="text" name=" medicalProblems" id=" medicalProblems" class="form-control" placeholder="Enter your medical problems" required>
+          </div>
+          <div class="form-group mb-3">
+            <label for="skills" class="form-label"> Skills (too good) <span class="text-danger">*</span></label>
+            <select name="skills" class="form-control" id="skills">
+              <% skills.forEach((data)=>{%>
+              <option value="<%- data._id%>" class="text-capitalize"><%- data.name  %></option>
+              <%}) %>
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="isAvailable" class="form-label">Are you now available?</label>
+            <select name="isAvailable" id="isAvailable" class="form-select">
+              <option value="true">Yes</option>
+              <option value="false" selected>No</option>
+            </select>
+          </div>
+          <div class="form-group mb-3">
+            <label for="isRescuer" class="form-label">Are you want to be rescuer?</label>
+            <select name="isRescuer" id="isRescuer" class="form-select">
+              <option value="true">Yes</option>
+              <option value="false" selected>No</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  document.getElementById('avatar').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = document.getElementById('previewImage');
+        img.src = e.target.result;
+        img.classList.remove('hidden');
+        document.getElementById('imageLabel').classList.add('hidden')
+      }
+      reader.readAsDataURL(file);
+    }
+  });
+</script>
