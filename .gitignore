@@ -1,0 +1,50 @@
+# Python Bytecode Files
+*.pyc
+*.pyo
+__pycache__/
+
+# Virtual Environment
+venv/
+myenv/
+env/
+ENV/
+*.env
+
+# Flask-specific files
+instance/
+*.db
+*.sqlite3
+
+# IDE/editor directories
+.vscode/
+.idea/
+
+# Environment configuration files
+.env
+*.env
+
+# Logs
+*.log
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Test Coverage
+.coverage
+coverage.xml
+*.coveragerc
+
+# pyenv
+.python-version
+
+# Packaging
+dist/
+build/
+*.egg-info/
+
+# MacOS system files
+.DS_Store
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
