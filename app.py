@@ -20,12 +20,8 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # Setup URLSafeTimedSerializer for generating reset tokens
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
-# Mail configuration (example)
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'your_email@gmail.com'
-app.config['MAIL_PASSWORD'] = 'your_email_password'
+# Mail configuration
+
 
 # Initialize
 db = SQLAlchemy(app)
@@ -174,58 +170,6 @@ def login():
             return redirect(url_for("login"))
 
     return render_template("auth/login.html")
-
-@app.route('/forgot_password', methods=['GET', 'POST'])
-def forgot_password():
-    if "user_id" in session:
-        return redirect(request.referrer or url_for("dashboard"))
-    if request.method == 'POST':
-        email = request.form['email']
-        user = User.query.filter_by(email=email).first()
-        if user:
-            token = s.dumps(email, salt='password-reset')
-            reset_link = url_for('reset_password', token=token, _external=True)
-            msg = Message('Password Reset Request', sender='your_email@gmail.com', recipients=[email])
-            msg.body = f'Click the following link to reset your password: {reset_link}'
-            try:
-                mail.send(msg)
-                flash('A password reset link has been sent to your email address.', 'success')
-                return redirect(url_for('forgot_password'))
-            except:
-                flash('There was an error sending the email. Please try again later.', 'danger')
-                return redirect(url_for('forgot_password'))
-        else:
-            flash('No account found with this email address.', 'error')
-            return redirect(url_for('forgot_password'))
-    return render_template('auth/forgot_password.html')
-
-@app.route('/reset_password/<token>', methods=['GET', 'POST'])
-def reset_password(token):
-    try:
-        email = s.loads(token, salt='password-reset', max_age=3600)
-        if request.method == 'POST':
-            password = request.form.get("password")
-            if not password or not is_valid_password(password):
-                flash("Password must be at least 6 characters long, contain at least one letter, one number, and one special character!", "danger")
-                return render_template("auth/reset_password.html", token=token)
-            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-            user = User.query.filter_by(email=email).first()
-
-            if user:
-                user.password = hashed_password
-                db.session.commit()
-                flash('Your password has been successfully reset!', 'success')
-                return redirect(url_for('login'))
-            else:
-                flash('User not found. Please try again.', 'danger')
-                return redirect(url_for('forgot_password'))
-        return render_template('auth/reset_password.html', token=token)
-    except SignatureExpired:
-        flash('The password reset link has expired.', 'danger')
-        return redirect(url_for('forgot_password'))
-    except Exception as e:
-        flash('The password reset link is invalid.', 'danger')
-        return redirect(url_for('forgot_password'))
 
 @app.route('/logout')
 def logout():
