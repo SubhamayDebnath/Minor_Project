@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, session
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
@@ -8,22 +9,28 @@ import re
 import time
 
 app = Flask(__name__)
-app.secret_key = "worldHello"  # Change this to a real secret key
+
+# Use a proper secret key for the app
+app.config["SECRET_KEY"] = "your_secret_key_here"  # Change this to a real secret key
 
 # Database configuration
-app.config["SQLALCHEMY_DATABASE_URI"] = (
-    "sqlite:///users.db"  # Change the database URI if needed
-)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///users.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
-# Mail configuration
+# Setup URLSafeTimedSerializer for generating reset tokens
+s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
+# Mail configuration (example)
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = 'your_email@gmail.com'
+app.config['MAIL_PASSWORD'] = 'your_email_password'
 
-# Initialize 
+# Initialize
 db = SQLAlchemy(app)
 mail = Mail(app)
-bcrypt = Bcrypt(app) 
-
+bcrypt = Bcrypt(app)
 
 # User and OTP models
 class User(db.Model):
@@ -34,66 +41,51 @@ class User(db.Model):
     password = db.Column(db.String(100), nullable=False)
     otp_verified = db.Column(db.Boolean, default=False)
 
-
 class OTP(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), nullable=False)
     otp_code = db.Column(db.String(6), nullable=False)
     expiry_time = db.Column(db.Float, nullable=False)
 
-
 # Utility functions
 def generate_otp():
     return "".join(random.choices(string.digits, k=6))
 
-
 def send_otp_email(email, otp):
-    # Create the Message object
     msg = Message("Your OTP Code", sender="your_email@gmail.com", recipients=[email])
     msg.body = f"Your OTP is {otp}. It will expire in 5 minutes."
-
-    # Send the message using the Flask-Mail send() method
     try:
         mail.send(msg)
     except Exception as e:
         print(f"Error sending email: {e}")
         flash("There was an issue sending the OTP. Please try again.", "error")
 
-
-# Phone validation regex (for Indian phone numbers)
+# Phone and email validation
 phone_regex = re.compile(r"^\+91[789]\d{9}$")
 
-# Email validation regex
 def is_valid_email(email):
     email_regex = r'^[a-zA-Z0-9_.+-]{6,}@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
     return re.match(email_regex, email) is not None
 
-
-# Password validation regex
 def is_valid_password(password):
     password_regex = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@$!%*?&]{6,}$'
     return re.match(password_regex, password) is not None
 
-
-# HomePage route
+# Routes
 @app.route("/")
 def home():
     return render_template("home/index.html")
 
-
-# Register route
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if "user_id" in session:
         return redirect(request.referrer or url_for("dashboard"))
     if request.method == "POST":
-        # Retrieve data from Form
         name = request.form.get("name")
         email = request.form.get("email")
         phone = request.form.get("phone")
         password = request.form.get("password")
 
-        # Validation checks
         if not name or len(name) < 2:
             flash("Name must be at least 2 characters long!", "error")
             return redirect(url_for("register"))
@@ -104,34 +96,26 @@ def register():
             flash("Please enter a valid email address!", "error")
             return redirect(url_for("register"))
         if not password or not is_valid_password(password):
-            flash(
-                "Password must be at least 6 characters long, contain at least one letter, one number, and one special character!",
-                "error",
-            )
+            flash("Password must be at least 6 characters long, contain at least one letter, one number, and one special character!", "error")
             return redirect(url_for("register"))
 
-        # Store user data in session
         session["name"] = name
         session["email"] = email
         session["phone"] = phone
         session["password"] = password
 
-        # Generate OTP and save it to DB
         otp = generate_otp()
-        otp_expiry = time.time() + 300  # 5 minutes expiry time
+        otp_expiry = time.time() + 300
         new_otp = OTP(email=email, otp_code=otp, expiry_time=otp_expiry)
         db.session.add(new_otp)
         db.session.commit()
 
-        # Send OTP email
         send_otp_email(email, otp)
         flash("OTP sent to your email. Please verify to complete registration.", "info")
         return redirect(url_for("verify_otp", email=email))
 
     return render_template("auth/register.html")
 
-
-# OTP Verification route
 @app.route("/verify_otp/<email>", methods=["GET", "POST"])
 def verify_otp(email):
     if "user_id" in session:
@@ -140,13 +124,13 @@ def verify_otp(email):
         otp = request.form.get("otp").strip()
         otp_entry = OTP.query.filter_by(email=email).first()
 
-        # Retrieve data from session
         name = session.get("name")
         email = session.get("email")
         phone = session.get("phone")
         password = session.get("password")
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-        password=hashed_password
+        password = hashed_password
+
         if otp_entry:
             if time.time() > otp_entry.expiry_time:
                 flash("OTP has expired. Please request a new OTP.", "error")
@@ -168,17 +152,13 @@ def verify_otp(email):
 
     return render_template("auth/verify_otp.html", email=email)
 
-
-# Login route
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if "user_id" in session:
         return redirect(request.referrer or url_for("dashboard"))
     if request.method == "POST":
-        # Retrieve data from Form
         email = request.form.get("email")
         password = request.form.get("password")
-        # Validation checks
         if not email or not password:
             flash("Please enter both email and password to log in.", "error")
             return redirect(url_for("login"))
@@ -195,13 +175,63 @@ def login():
 
     return render_template("auth/login.html")
 
-# Logout route
+@app.route('/forgot_password', methods=['GET', 'POST'])
+def forgot_password():
+    if "user_id" in session:
+        return redirect(request.referrer or url_for("dashboard"))
+    if request.method == 'POST':
+        email = request.form['email']
+        user = User.query.filter_by(email=email).first()
+        if user:
+            token = s.dumps(email, salt='password-reset')
+            reset_link = url_for('reset_password', token=token, _external=True)
+            msg = Message('Password Reset Request', sender='your_email@gmail.com', recipients=[email])
+            msg.body = f'Click the following link to reset your password: {reset_link}'
+            try:
+                mail.send(msg)
+                flash('A password reset link has been sent to your email address.', 'success')
+                return redirect(url_for('forgot_password'))
+            except:
+                flash('There was an error sending the email. Please try again later.', 'danger')
+                return redirect(url_for('forgot_password'))
+        else:
+            flash('No account found with this email address.', 'error')
+            return redirect(url_for('forgot_password'))
+    return render_template('auth/forgot_password.html')
+
+@app.route('/reset_password/<token>', methods=['GET', 'POST'])
+def reset_password(token):
+    try:
+        email = s.loads(token, salt='password-reset', max_age=3600)
+        if request.method == 'POST':
+            password = request.form.get("password")
+            if not password or not is_valid_password(password):
+                flash("Password must be at least 6 characters long, contain at least one letter, one number, and one special character!", "danger")
+                return render_template("auth/reset_password.html", token=token)
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+            user = User.query.filter_by(email=email).first()
+
+            if user:
+                user.password = hashed_password
+                db.session.commit()
+                flash('Your password has been successfully reset!', 'success')
+                return redirect(url_for('login'))
+            else:
+                flash('User not found. Please try again.', 'danger')
+                return redirect(url_for('forgot_password'))
+        return render_template('auth/reset_password.html', token=token)
+    except SignatureExpired:
+        flash('The password reset link has expired.', 'danger')
+        return redirect(url_for('forgot_password'))
+    except Exception as e:
+        flash('The password reset link is invalid.', 'danger')
+        return redirect(url_for('forgot_password'))
+
 @app.route('/logout')
 def logout():
-    session.clear()  
+    session.clear()
     return redirect(url_for('login'))
 
-# Dashboard route (only accessible after login)
 @app.route("/dashboard")
 def dashboard():
     if "user_id" not in session:
@@ -209,8 +239,6 @@ def dashboard():
         return redirect(url_for("login"))
     return render_template("admin/dashboard.html")
 
-
-# Run the application
 with app.app_context():
     db.create_all()
 
