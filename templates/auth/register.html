@@ -28,7 +28,7 @@
                             {% endif %}
                         {% endwith %}
 
-                        <form method="post">
+                        <form method="post" id="myForm">
                             <div class="form-group mb-3">
                                 <label for="name" class="form-label">Name</label>
                                 <div class="input-container">
@@ -75,7 +75,7 @@
                                 </div>
                             </div>
                             <div class="my-3">
-                                <button class="btn btn-custom w-100" type="submit">Register</button>
+                                <button class="btn btn-custom w-100" id="submitBtn" type="submit">Register</button>
                             </div>
                         </form>
                     </div>
@@ -85,6 +85,13 @@
         </div>
     </main>
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="static/js/form.js"></script>
     <script src="/static/js/script.js"></script>
+    <script>
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+        document.getElementById('submitBtn').disabled = true;e
+        document.getElementById('submitBtn').innerHTML = 'Submitting...';
+        });
+    </script>
 </body>
 </html>

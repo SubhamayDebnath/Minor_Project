@@ -26,7 +26,7 @@
                                 </div>
                             {% endif %}
                         {% endwith %}
-                        <form action="{{ url_for('verify_otp', email=email) }}" method="post">
+                        <form action="{{ url_for('verify_otp', email=email) }}" id="myForm" method="post">
                             <div class="form-group mb-3">
                                 <label for="otp" class="form-label">Enter OTP</label>
                                 <div class="input-container">
@@ -39,7 +39,7 @@
                                 </div>
                             </div>
                             <div class="my-3">
-                                <button class="btn btn-custom w-100" type="submit">Verify OTP</button>
+                                <button class="btn btn-custom w-100" id="submitBtn" type="submit">Verify OTP</button>
                             </div>
                         </form>
                     </div>
@@ -50,5 +50,11 @@
     </main>
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
     <script src="/static/js/script.js"></script>
+    <script>
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+        document.getElementById('submitBtn').disabled = true;e
+        document.getElementById('submitBtn').innerHTML = 'Submitting...';
+        });
+    </script>
 </body>
 </html>

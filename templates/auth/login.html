@@ -26,7 +26,7 @@
                                 </div>
                             {% endif %}
                         {% endwith %}
-                        <form method="post">
+                        <form method="post" id="myForm">
                             <div class="form-group mb-3">
                                 <label for="email" class="form-label">Email</label>
                                 <div class="input-container">
@@ -53,7 +53,7 @@
                                 <a href="" class="form-link" >Forget Password ?</a>
                             </div>
                             <div class="my-3">
-                                <button class="btn btn-custom w-100" type="submit">Login</button>
+                                <button class="btn btn-custom w-100" id="submitBtn" type="submit">Login</button>
                             </div>
                         </form>
                     </div>
@@ -63,6 +63,13 @@
         </div>
     </main>
     <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="static/js/form.js"></script>
     <script src="/static/js/script.js"></script>
+    <script>
+        document.getElementById('myForm').addEventListener('submit', function(event) {
+        document.getElementById('submitBtn').disabled = true;e
+        document.getElementById('submitBtn').innerHTML = 'Submitting...';
+        });
+    </script>
 </body>
 </html>
