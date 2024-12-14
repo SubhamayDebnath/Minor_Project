@@ -19,7 +19,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # Mail configuration
 
 
-# Initialize database
+# Initialize 
 db = SQLAlchemy(app)
 mail = Mail(app)
 bcrypt = Bcrypt(app) 
@@ -84,6 +84,8 @@ def home():
 # Register route
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    if "user_id" in session:
+        return redirect(request.referrer or url_for("dashboard"))
     if request.method == "POST":
         # Retrieve data from Form
         name = request.form.get("name")
@@ -132,6 +134,8 @@ def register():
 # OTP Verification route
 @app.route("/verify_otp/<email>", methods=["GET", "POST"])
 def verify_otp(email):
+    if "user_id" in session:
+        return redirect(request.referrer or url_for("dashboard"))
     if request.method == "POST":
         otp = request.form.get("otp").strip()
         otp_entry = OTP.query.filter_by(email=email).first()
@@ -168,6 +172,8 @@ def verify_otp(email):
 # Login route
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if "user_id" in session:
+        return redirect(request.referrer or url_for("dashboard"))
     if request.method == "POST":
         # Retrieve data from Form
         email = request.form.get("email")
@@ -189,6 +195,11 @@ def login():
 
     return render_template("auth/login.html")
 
+# Logout route
+@app.route('/logout')
+def logout():
+    session.clear()  
+    return redirect(url_for('login'))
 
 # Dashboard route (only accessible after login)
 @app.route("/dashboard")
