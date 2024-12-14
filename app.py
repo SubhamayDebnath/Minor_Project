@@ -148,7 +148,7 @@ def verify_otp(email):
                 flash("OTP has expired. Please request a new OTP.", "error")
                 return redirect(url_for("register"))
             if otp == otp_entry.otp_code:
-                user = User(name, email, phone, password, otp_verified=True)
+                user = User(name=name, email=email, phone=phone, password=password, otp_verified=True)
                 db.session.add(user)
                 db.session.commit()
                 db.session.delete(otp_entry)
@@ -196,7 +196,6 @@ def dashboard():
     if "user_id" not in session:
         flash("Please log in first.", "error")
         return redirect(url_for("login"))
-
     return render_template("admin/dashboard.html")
 
 
