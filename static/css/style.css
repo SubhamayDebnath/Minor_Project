@@ -261,3 +261,27 @@ a{
     background-color:var(--accent-hover-color) ;
     color: var(--text-color);
 }
+
+@media (max-width:768px) {
+    .hero-heading{
+        font-size: 2rem;
+    }
+    .hero-subheading{
+        width: 100%;
+    }
+    .hero-btn{
+        font-size: 15px;
+        font-weight: 500;
+        width: fit-content;
+        text-decoration: none;
+        background-color: var(--accent-color);
+        padding: .5rem 1rem;
+        color: var(--text-color) !important;
+    }
+}
+@media (max-width:576px) {
+    .hero-btn{
+        width: 100%;
+        text-align: center;
+    }
+}
