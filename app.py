@@ -36,6 +36,9 @@ class User(db.Model):
     phone = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(100), nullable=False)
     otp_verified = db.Column(db.Boolean, default=False)
+    rescuer = db.Column(db.Boolean, default=True)  
+    is_admin = db.Column(db.Boolean, default=True) 
+
 
 class OTP(db.Model):
     id = db.Column(db.Integer, primary_key=True)
