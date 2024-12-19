@@ -3,6 +3,7 @@ from itsdangerous import URLSafeTimedSerializer, SignatureExpired
 from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_mail import Mail, Message
+from math import radians, sin, cos, sqrt, atan2
 import random
 import string
 import re
@@ -24,6 +25,7 @@ s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
 
 
+
 # Initialize
 db = SQLAlchemy(app)
 mail = Mail(app)
@@ -37,6 +39,8 @@ class User(db.Model):
     phone = db.Column(db.String(20), nullable=False)
     password = db.Column(db.String(100), nullable=False)
     otp_verified = db.Column(db.Boolean, default=False)
+    latitude = db.Column(db.Float, nullable=True)  
+    longitude = db.Column(db.Float, nullable=True)
     rescuer = db.Column(db.Boolean, default=True)  
     is_admin = db.Column(db.Boolean, default=True) 
 
@@ -79,6 +83,77 @@ def send_otp_email(email, otp):
     except Exception as e:
         print(f"Error sending email: {e}")
         flash("There was an issue sending the OTP. Please try again.", "error")
+
+from math import radians, sin, cos, sqrt, atan2
+
+def haversine(lat1, lon1, lat2, lon2):
+    try:
+        lat1 = float(lat1)
+        lon1 = float(lon1)
+        lat2 = float(lat2)
+        lon2 = float(lon2)
+    except ValueError:
+        return None  
+
+    R = 6371 
+    phi1 = radians(lat1)
+    phi2 = radians(lat2)
+    delta_phi = radians(lat2 - lat1)
+    delta_lambda = radians(lon2 - lon1)
+
+    a = sin(delta_phi / 2) ** 2 + cos(phi1) * cos(phi2) * sin(delta_lambda / 2) ** 2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    distance = R * c
+    return distance
+
+def send_alert_email(recipient_email, report, user_name):
+    msg = Message(f"New Disaster Alert: {report.title}", sender="your_email@gmail.com", recipients=[recipient_email])
+    msg.body = f"""
+    Dear {user_name},
+
+    A new disaster alert has been issued in your area. Please find the details of the incident below and follow necessary safety instructions.
+
+    ---
+    Alert Title:
+    {report.title}
+
+    Description:
+    {report.description}
+
+    Location:
+    {report.location}
+
+    Status:
+    {"Active" if report.status else "Inactive"}
+
+    Alert Level:
+    {report.alert}
+
+    Date Reported:
+    {report.date_reported}
+
+    ---
+    What You Should Do:
+    1. Stay informed: Monitor local news outlets and official emergency services for updates.
+    2. Follow instructions: Follow any guidance provided by local authorities.
+    3. Take necessary precautions: Ensure your safety by adhering to the precautionary measures that may be issued.
+
+    If you feel this alert does not apply to your area, or if you need more information, please contact your local emergency services immediately.
+
+    We will continue to monitor the situation and provide updates as needed.
+
+    Thank you for staying alert and informed.
+
+    Stay safe,  
+    [Your Organization's Name]  
+    *Your trusted source for disaster alerts.*
+    """
+    try:
+        mail.send(msg)  # Send the email
+        print(f"Alert sent to {recipient_email}")
+    except Exception as e:
+        print(f"Error sending email to {recipient_email}: {e}")
+
 
 # Phone and email validation
 phone_regex = re.compile(r"^\+91[789]\d{9}$")
@@ -130,6 +205,8 @@ def register():
         email = request.form.get("email")
         phone = request.form.get("phone")
         password = request.form.get("password")
+        latitude = request.form.get('latitude')  
+        longitude = request.form.get('longitude')
 
         if not name or len(name) < 2:
             flash("Name must be at least 2 characters long!", "error")
@@ -148,6 +225,8 @@ def register():
         session["email"] = email
         session["phone"] = phone
         session["password"] = password
+        session['latitude'] = latitude
+        session['longitude'] = longitude
 
         otp = generate_otp()
         otp_expiry = time.time() + 300
@@ -175,13 +254,16 @@ def verify_otp(email):
         password = session.get("password")
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         password = hashed_password
+        latitude = session.get('latitude')
+        longitude = session.get('longitude')
+        print(longitude)
 
         if otp_entry:
             if time.time() > otp_entry.expiry_time:
                 flash("OTP has expired. Please request a new OTP.", "error")
                 return redirect(url_for("register"))
             if otp == otp_entry.otp_code:
-                user = User(name=name, email=email, phone=phone, password=password, otp_verified=True)
+                user = User(name=name, email=email, phone=phone, password=password, otp_verified=True,latitude= latitude, longitude=longitude)
                 db.session.add(user)
                 db.session.commit()
                 db.session.delete(otp_entry)
@@ -248,11 +330,11 @@ def alert():
         title = request.form['type']  
         description = request.form['desc']  
         location = request.form['location'] 
-        status = request.form.get('status') == '1'  # Ensures status is handled properly
+        status = request.form.get('status') == '1'  
         alert = request.form['alert']
-        latitude = request.form.get('latitude')  # Adding latitude if it's part of the form
+        latitude = request.form.get('latitude')  
         longitude = request.form.get('longitude')
-        range = request.form.get('range')  # Adding longitude if it's part of the form
+        range = request.form.get('range') 
         user_id = session.get("user_id")
         date_reported = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
@@ -269,7 +351,10 @@ def alert():
                 longitude=longitude if longitude else None,
                 range=range
         )
-
+        users = User.query.all()
+        for user in users:
+            if user.email:  
+                send_alert_email(user.email, new_report, user.name)
         db.session.add(new_report)
         db.session.commit()
 
