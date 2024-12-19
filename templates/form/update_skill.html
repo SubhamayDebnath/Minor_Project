@@ -1,0 +1,36 @@
+{% extends 'admin.html' %}
+
+{% block title %}Update Skill{% endblock title %}
+
+{% block body %}
+<section>
+    <div class="container">
+        <div class="row px-0 mb-5">
+            <div class="col-md-6 col-sm-8 col-12 mx-auto">
+                <h4 class="text-white">Update Skill</h4>
+                <form method="post">
+                    <!-- Skill Name -->
+                    <div class="form-group mb-3">
+                        <label for="skill" class="form-label">Skill Name</label>
+                        <div class="input-container">
+                            <!-- Pre-populate the skill name from the database -->
+                            <input type="text" name="skill" id="skill" class="form-control" autocomplete="on" value="{{ skill.skill_name }}" required>
+                        </div>
+                    </div>
+
+                    <!-- Is Active Checkbox -->
+                    <div class="form-group mb-3">
+                        <input type="checkbox" name="isAvailable" id="isAvailable" {% if skill.isAvailable %}checked{% endif %}>
+                        <label for="isAvailable" class="form-label">Is Active</label>
+                    </div>
+
+                    <!-- Save Changes Button -->
+                    <div class="d-flex align-items-center justify-content-end">
+                        <button type="submit" class="btn btn-custom">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}

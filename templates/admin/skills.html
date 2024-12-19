@@ -1,0 +1,78 @@
+{% extends 'admin.html' %}
+{% block title %}Home-Skill{% endblock title %} 
+{% block body %}
+<section>
+    <div class="d-flex align-items-center justify-content-between py-2 mb-3">
+        <h4 class="text-white">Skills</h4>
+        <button class="add-btn btn" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Skills</button>
+    </div>
+    <div class="container">
+      <div class="overflow-side">
+        <table class="table table-dark table-bordered table-responsive-md">
+          <thead>
+              <tr>
+                  <th>Name</th>
+                  <th>Created</th>
+                  <th>Updated</th>
+                  <th>Is Active</th>
+                  <th>Action</th>
+              </tr>
+          </thead>
+          <tbody>
+            {% if skill_list %}
+              {% for skill in skill_list %}
+              <tr>
+                <td>{{ skill.skill_name }}</td>
+                <td>{{ skill.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ skill.updated_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                <td>{{ 'Available' if skill.isAvailable else 'Not Available' }}</td>
+                <td>
+                  <div class="d-flex align-items-center gap-2">
+                    <a href="/update_skill/{{skill.id}}" class="btn btn-primary btn-sm text-white">Edit</a>
+                    <a href="/delete_skill/{{skill.id}}" class="btn btn-danger btn-sm text-white">Delete</a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            {% else %}
+            <tr>
+              <td colspan="6" class="text-center">No Data</td>
+            </tr>
+            {% endif %}
+          </tbody>
+      </table>
+      </div>
+
+    </div>
+</section>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-0 d-flex align-items-center justify-content-between">
+          <h1 class="modal-title fs-5 " id="exampleModalLabel">Add Skills</h1>
+          <button class="close-btn" data-bs-dismiss="modal" aria-label="Close">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form method="post">
+            <div class="form-group mb-3">
+              <label for="skill" class="form-label">Skill Name</label>
+              <div class="input-container">
+                  <input type="text" name="skill" id="skill" class="form-control" autocomplete="on" required >
+              </div>
+            </div>
+            <div class="form-group mb-3">
+                <input type="checkbox" name="isAvailable" id="isAvailable" checked>
+              <label for="isAvailable" class="form-label">Is active</label>
+            </div>
+            <div class="d-flex align-items-center justify-content-end">
+              <button type="submit" class="btn btn-custom">Save changes</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock body %}

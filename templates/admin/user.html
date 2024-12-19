@@ -1,0 +1,52 @@
+{% extends 'admin.html' %}
+{% block title %}Home-Skill{% endblock title %} 
+{% block body %}
+<section>
+    <div class="d-flex align-items-center justify-content-between py-2 mb-3">
+        <h4 class="text-white">Users</h4>
+    </div>
+    <div class="container">
+        <div class="overflow-side">
+            <table class="table table-dark table-bordered table-responsive-md">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Rescuer</th>
+                        <th>Is Admin</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if users %}
+                      {% for user in users %}
+                      <tr>
+                        <td>{{user.name}}</td>
+                        <td>{{user.email}}</td>
+                        <td>{{user.phone}}</td>
+                        <td>{{ 'Rescuer' if user.rescuer else 'User' }}</td>
+                        <td>{{ 'Admin' if user.is_admin else 'Not' }}</td>
+                        <td>                    
+                            <div class="d-flex align-items-center gap-2">
+                                <a href="" class="btn btn-secondary btn-sm text-white">Disable</a>
+                                <a href="/update_user/{{user.id}} " class="btn btn-primary btn-sm text-white">Edit</a>
+                                {% if user_id != user.id %}
+                                <a href="/delete_user/{{user.id}}" class="btn btn-danger btn-sm text-white">Delete</a>
+                                {% endif %}
+                            </div>
+                        </td>
+                      </tr>
+                      {% endfor %}
+                    {% else %}
+                    <tr>
+                      <td colspan="6" class="text-center">No Data</td>
+                    </tr>
+                    {% endif %}
+                  </tbody>
+            </table>
+        </div>
+
+    </div>
+</section>
+{% endblock body %}

@@ -7,6 +7,8 @@ import random
 import string
 import re
 import time
+from datetime import datetime
+
 
 app = Flask(__name__)
 
@@ -20,15 +22,7 @@ app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 # Setup URLSafeTimedSerializer for generating reset tokens
 s = URLSafeTimedSerializer(app.config['SECRET_KEY'])
 
-# Mail configuration
-# Mail configuration
-app.config["MAIL_SERVER"] = "smtp.gmail.com"
-app.config["MAIL_PORT"] = 587
-app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USERNAME"] = ""
-app.config["MAIL_PASSWORD"] = ""
-app.config["MAIL_USE_TLS"] = True
-app.config["MAIL_USE_SSL"] = False
+
 
 # Initialize
 db = SQLAlchemy(app)
@@ -46,6 +40,26 @@ class User(db.Model):
     rescuer = db.Column(db.Boolean, default=True)  
     is_admin = db.Column(db.Boolean, default=True) 
 
+class DisasterReport(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    location = db.Column(db.String(100), nullable=False)
+    alert = db.Column(db.String(100), nullable=False)
+    status = db.Column(db.Boolean, default=True)
+    date_reported = db.Column(db.String(50), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    latitude = db.Column(db.Float, nullable=True)  
+    longitude = db.Column(db.Float, nullable=True)
+    range = db.Column(db.Float, nullable=True)   
+
+class Skill(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    skill_name = db.Column(db.String(100), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
+    isAvailable = db.Column(db.Boolean, default=True, nullable=False)
+   
 
 class OTP(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -77,10 +91,35 @@ def is_valid_password(password):
     password_regex = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[@#$!%*?&])[A-Za-z\d@$!%*?&]{6,}$'
     return re.match(password_regex, password) is not None
 
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('error/404.html',referrer=request.referrer), 404
 # Routes
 @app.route("/")
 def home():
-    return render_template("home/index.html")
+    userID=session.get("user_id")
+    isLoggedIn = False
+    if userID:
+        isLoggedIn = True
+    return render_template("home/index.html",isLoggedIn=isLoggedIn)
+
+@app.route('/alert')
+def homePageReport():
+    userID=session.get("user_id")
+    isLoggedIn = False
+    if userID:
+        isLoggedIn = True
+    disaster_reports = DisasterReport.query.all()
+    return render_template("home/report.html",disaster_reports=disaster_reports,isLoggedIn=isLoggedIn)
+
+@app.route('/alert_report/<int:report_id>')
+def alert_report(report_id):
+    userID=session.get("user_id")
+    isLoggedIn = False
+    if userID:
+        isLoggedIn = True
+    report = DisasterReport.query.get_or_404(report_id)
+    return render_template("home/show_alert.html",isLoggedIn=isLoggedIn,report=report)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -174,7 +213,10 @@ def login():
             session["user_id"] = user.id
             session["user_email"] = user.email
             flash("Login successful!", "success")
-            return redirect(url_for("dashboard"))
+            if user.is_admin:
+                return redirect(url_for("dashboard"))
+            else:
+                return redirect('/')
         else:
             flash("Invalid email or password!", "error")
             return redirect(url_for("login"))
@@ -191,7 +233,160 @@ def dashboard():
     if "user_id" not in session:
         flash("Please log in first.", "error")
         return redirect(url_for("login"))
-    return render_template("admin/dashboard.html")
+    Skills_len=len(Skill.query.all())
+    disaster_reports_len=len(DisasterReport.query.all())
+    user_len = len(User.query.all())
+    return render_template("admin/dashboard.html",disaster_reports_len=disaster_reports_len,Skills_len=Skills_len,user_len=user_len)
+
+@app.route("/report", methods=["GET", "POST"])
+def alert():
+    if "user_id" not in session:
+        flash("Please log in first.", "error")
+        return redirect(url_for("login"))
+
+    if request.method == 'POST':
+        title = request.form['type']  
+        description = request.form['desc']  
+        location = request.form['location'] 
+        status = request.form.get('status') == '1'  # Ensures status is handled properly
+        alert = request.form['alert']
+        latitude = request.form.get('latitude')  # Adding latitude if it's part of the form
+        longitude = request.form.get('longitude')
+        range = request.form.get('range')  # Adding longitude if it's part of the form
+        user_id = session.get("user_id")
+        date_reported = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+        # Creating a new disaster report instance
+        new_report = DisasterReport(
+                title=title,
+                description=description,
+                location=location,
+                status=status,
+                alert=alert,
+                date_reported=date_reported,
+                user_id=user_id,
+                latitude=latitude if latitude else None,  
+                longitude=longitude if longitude else None,
+                range=range
+        )
+
+        db.session.add(new_report)
+        db.session.commit()
+
+        return redirect('/report') 
+
+    disaster_reports = DisasterReport.query.all()
+    return render_template("admin/alert.html", disaster_reports=disaster_reports)  
+
+@app.route('/update_report/<int:id>', methods=['GET', 'POST'])
+def update_report(id):
+    disaster_report = DisasterReport.query.get_or_404(id)
+    if request.method == 'POST':
+        title = request.form['type']  
+        description = request.form['desc']  
+        location = request.form['location']
+        status = True if request.form['status'] == '1' else False  
+        alert_level = request.form['alert'] 
+        user_id = session.get("user_id") 
+        date_reported = datetime.now().strftime('%Y-%m-%d %H:%M:%S')  
+        disaster_report.title = title
+        disaster_report.description = description
+        disaster_report.location = location
+        disaster_report.status = status
+        disaster_report.alert = alert_level
+        disaster_report.date_reported = date_reported
+        disaster_report.user_id = user_id 
+        db.session.commit()
+
+        return redirect('/report') 
+
+    return render_template('form/update_report.html', disaster_report=disaster_report)
+
+
+@app.route('/delete_disaster/<int:id>', methods=['GET', 'POST'])
+def delete_disaster(id):
+    disaster_report = DisasterReport.query.get_or_404(id) 
+    db.session.delete(disaster_report)  
+    db.session.commit() 
+    return redirect('/report')
+
+@app.route('/skills', methods=['GET', 'POST'])
+def skills():
+    if request.method == 'POST':
+        skill_name = request.form['skill']
+        isAvailable = request.form['isAvailable']
+        if not skill_name or not isAvailable:
+            flash('Please fill in all fields', 'error')
+            return redirect(url_for('skills'))
+        else:
+            new_skill = Skill(skill_name=skill_name, isAvailable=isAvailable == 'on')
+            db.session.add(new_skill)
+            db.session.commit()
+            return redirect(url_for('skills'))
+    skill_list=Skill.query.all()
+    return render_template('admin/skills.html',skill_list=skill_list)
+ 
+@app.route('/update_skill/<int:id>', methods=['GET', 'POST']) 
+def update_skill(id):
+    skill = Skill.query.get_or_404(id) 
+    if request.method == 'POST':
+        skill.skill_name = request.form['skill']
+        skill.isAvailable = request.form['isAvailable'] == 'on' 
+        skill.updated_at = datetime.utcnow()
+        db.session.commit() 
+        flash('Skill updated successfully.', 'success') 
+        return redirect(url_for('skills')) 
+    return render_template('form/update_skill.html', skill=skill)
+
+
+@app.route('/delete_skill/<int:id>', methods=['GET', 'POST'])
+def delete_skill(id):
+    skill = Skill.query.get(id) 
+    if skill:
+        db.session.delete(skill) 
+        db.session.commit()
+        flash('Skill has been deleted successfully.', 'success') 
+    else:
+        flash('Skill not found.', 'danger') 
+
+    return redirect(url_for('skills'))
+@app.route('/users',methods=['GET', 'POST'])
+def users():
+    users = User.query.all()
+    user_id=session.get('user_id')
+    return render_template('admin/user.html', users=users,user_id=user_id)
+
+@app.route('/delete_user/<int:id>', methods=['GET', 'POST'])
+def delete_user(id):
+    user = User.query.get(id) 
+    if user:
+        db.session.delete(user) 
+        db.session.commit()
+        flash('User has been deleted successfully.', 'success') 
+    else:
+        flash('User not found.', 'danger') 
+
+    return redirect('/users')
+
+@app.route('/update_user/<int:id>',  methods=['GET', 'POST'])
+def update_user_admin(id):
+    user = User.query.get(id)
+    if not user:
+        flash('User not found.', 'danger') 
+        return redirect(url_for('users'))
+    if request.method == 'POST':
+        is_rescuer = request.form.get('rescuer') 
+        is_admin = request.form.get('is_admin') 
+        print(is_rescuer,is_admin)
+        user.rescuer = is_rescuer == 'on'
+        user.is_admin = is_admin == 'on'
+        db.session.commit()
+        flash('User updated successfully.', 'success')
+        return redirect('/users')
+    return render_template('form/update_user.html', user=user)
+
+
+
 
 with app.app_context():
     db.create_all()

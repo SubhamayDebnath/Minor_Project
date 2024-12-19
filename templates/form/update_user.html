@@ -1,0 +1,32 @@
+{% extends 'admin.html' %}
+
+{% block title %}Update User{% endblock title %}
+
+{% block body %}
+<section>
+    <div class="container">
+        <div class="row px-0 mb-5">
+            <div class="col-md-6 col-sm-8 col-12 mx-auto">
+                <h4 class="text-white">Update User</h4>
+                <form method="post">
+                    <!-- Role Checkbox -->
+                    <div class="form-group mb-3">
+                        <input type="checkbox" name="rescuer" id="rescuer" {% if user.rescuer %}checked{% endif %}>
+                        <label for="rescuer" class="form-label">Make this user a rescuer</label>
+                    </div>
+                    <!-- Admin Checkbox -->
+                    <div class="form-group mb-3">
+                        <input type="checkbox" name="is_admin" id="is_admin" 
+                               {% if user.is_admin %}checked{% endif %}>
+                        <label for="is_admin" class="form-label">Make this user an admin</label>
+                    </div>
+                    <!-- Submit Button -->
+                    <div class="d-flex align-items-center justify-content-end">
+                        <button type="submit" class="btn btn-custom">Save changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock body %}
